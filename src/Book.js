@@ -9,19 +9,24 @@ class Book extends Component {
     authors: PropTypes.string.isRequired
   }
 
-  render() {
-    const { title, authors, bookCover } = this.props
+  onShelfChange = (newShelf) => {
+    console.log(newShelf)
+  }
 
+  render() {
     return (
       <div className="book">
         <div className="book-top">
           <div className="book-cover"
-            style={{ width: 128, height: 188, backgroundImage: `url("${bookCover}")` }}>
+            style={{ width: 128, height: 188, backgroundImage: `url("${this.props.bookCover}")` }}>
           </div>
-          <BookShelfChanger />
+          <BookShelfChanger
+            value={this.props.shelf}
+            onShelfChange={(newShelf) => this.onShelfChange(newShelf)}
+            id="" />
         </div>
-        <div className="book-title">{title}</div>
-        <div className="book-authors">{authors}</div>
+        <div className="book-title">{this.props.title}</div>
+        <div className="book-authors">{this.props.authors}</div>
       </div>
     )
   }
