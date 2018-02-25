@@ -13,7 +13,6 @@ class BookShelfChanger extends Component {
     })
 
     this.props.onShelfChange(e.target.value)
-    console.log('no BookShelfChanger:', this.state)
   }
 
   render() {
