@@ -6,7 +6,7 @@ class Book extends Component {
 
   static propTypes = {
     title: PropTypes.string.isRequired,
-    authors: PropTypes.string.isRequired
+    authors: PropTypes.array.isRequired
   }
 
   onShelfChange = (newShelf) => {
@@ -26,7 +26,11 @@ class Book extends Component {
             id="" />
         </div>
         <div className="book-title">{this.props.title}</div>
-        <div className="book-authors">{this.props.authors}</div>
+        <div className="book-authors">
+        {(this.props.authors && this.props.authors.length > 0)
+            ? this.props.authors.map(author => author)
+            : 'No authors identified.'
+          }</div>
       </div>
     )
   }
