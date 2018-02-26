@@ -9,28 +9,27 @@ class Book extends Component {
     authors: PropTypes.array.isRequired
   }
 
-  onShelfChange = (newShelf) => {
-    console.log(newShelf)
-  }
-
   render() {
     return (
-      <div className="book">
+      <div className="book" id={this.props.id}>
         <div className="book-top">
           <div className="book-cover"
             style={{ width: 128, height: 188, backgroundImage: `url("${this.props.bookCover}")` }}>
           </div>
           <BookShelfChanger
+            id={`shelf_${this.props.id}`}
             value={this.props.shelf}
-            onShelfChange={(newShelf) => this.onShelfChange(newShelf)}
-            id="" />
+            onShelfChange={(newShelf) => this.props.onShelfChange(newShelf)}
+            />
         </div>
         <div className="book-title">{this.props.title}</div>
         <div className="book-authors">
-        {(this.props.authors && this.props.authors.length > 0)
-            ? this.props.authors.map(author => author)
-            : 'No authors identified.'
-          }</div>
+          {
+            (this.props.authors && this.props.authors.length > 0)
+              ? this.props.authors.map(author => author)
+              : 'No authors identified.'
+          }
+        </div>
       </div>
     )
   }

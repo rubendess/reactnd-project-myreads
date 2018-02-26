@@ -14,10 +14,13 @@ class BookShelf extends Component {
               (books && books.length > 0) ? books.map(book =>
                 <Book
                   key={book.id}
+                  id={`book_${book.id}`}
                   title={book.title}
                   authors={book.authors}
                   bookCover={book.imageLinks.thumbnail}
-                  shelf={book.shelf} />
+                  shelf={book.shelf}
+                  onShelfChange={(newShelf) => this.props.onShelfChange(book, newShelf)}
+                  />
               ) : 'No books on this shelf'
             }
           </ol>
