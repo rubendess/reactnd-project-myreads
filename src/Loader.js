@@ -4,8 +4,11 @@ export default class Loader extends Component {
     render(){
         return(
     				<div className="loader-box">
-    						<div className="">
-    							<img src="/loading.gif"/>
+    						<div>
+    							<img
+                    title="loading"
+                    alt="loading"
+                    src="/loading.gif" />
     						</div>
                 <div>Loading...</div>
     				</div>
