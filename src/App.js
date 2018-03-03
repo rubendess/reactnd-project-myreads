@@ -18,15 +18,24 @@ class BooksApp extends React.Component {
   }
 
   componentDidMount() {
-    this.setState({ isFetching: true })
+    this.setIsFetching(true)
     BooksAPI.getAll().then((books) => {
       this.setState({ books, isFetching: false })
     })
   }
 
+  setIsFetching = (isFetching) => {
+    this.setState({ isFetching })
+  }
+
   changeBookShelf = (book, newShelf) => {
+    this.setIsFetching(true)
     BooksAPI.update(book, newShelf).then((result) => {
-      console.log('changing the book shelf', result)
+      let newBook = book
+      newBook.shelf = newShelf
+      const newBookList = this.state.books
+      newBookList.splice(this.state.books.indexOf(book), 1, book)
+      this.setState({ books: newBookList, isFetching: false })
     })
   }
 
