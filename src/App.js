@@ -1,6 +1,7 @@
 import React from 'react'
 import * as BooksAPI from './BooksAPI'
 import BookShelf from './BookShelf'
+import Loader from './Loader'
 import './App.css'
 
 class BooksApp extends React.Component {
@@ -12,12 +13,14 @@ class BooksApp extends React.Component {
      * pages, as well as provide a good URL they can bookmark and share.
      */
     showSearchPage: false,
+    isFetching: false,
     books: []
   }
 
   componentDidMount() {
+    this.setState({ isFetching: true })
     BooksAPI.getAll().then((books) => {
-      this.setState({ books })
+      this.setState({ books, isFetching: false })
     })
   }
 
@@ -58,23 +61,29 @@ class BooksApp extends React.Component {
               <h1>MyReads</h1>
             </div>
             <div className="list-books-content">
-              <div>
-                <BookShelf
-                  title='Currently Reading'
-                  books={this.state.books.filter(book => book.shelf === 'currentlyReading')}
-                  onShelfChange={this.changeBookShelf}
-                />
-                <BookShelf
-                  title='Want to Read'
-                  books={this.state.books.filter(book => book.shelf === 'wantToRead')}
-                  onShelfChange={this.changeBookShelf}
-                />
-                <BookShelf
-                  title='Read'
-                  books={this.state.books.filter(book => book.shelf === 'read')}
-                  onShelfChange={this.changeBookShelf}
-                />
-              </div>
+             {
+             this.state.isFetching ?
+                 <Loader />
+             : (
+                  <div>
+                    <BookShelf
+                      title='Currently Reading'
+                      books={this.state.books.filter(book => book.shelf === 'currentlyReading')}
+                      onShelfChange={this.changeBookShelf}
+                    />
+                    <BookShelf
+                      title='Want to Read'
+                      books={this.state.books.filter(book => book.shelf === 'wantToRead')}
+                      onShelfChange={this.changeBookShelf}
+                    />
+                    <BookShelf
+                      title='Read'
+                      books={this.state.books.filter(book => book.shelf === 'read')}
+                      onShelfChange={this.changeBookShelf}
+                    />
+                  </div>
+                )
+              }
             </div>
             <div className="open-search">
               <a onClick={() => this.setState({ showSearchPage: true })}>Add a book</a>

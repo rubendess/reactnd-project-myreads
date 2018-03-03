@@ -172,3 +172,9 @@ body, .app {
   text-align: center;
   font-size: 0.8em;
 }
+
+/* loader */
+
+.loader-box {
+  text-align: center;
+}
