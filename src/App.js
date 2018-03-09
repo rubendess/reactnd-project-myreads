@@ -1,6 +1,7 @@
 import React from 'react'
 import * as BooksAPI from './BooksAPI'
 import BookShelf from './BookShelf'
+import Book from './Book'
 import Loader from './Loader'
 import './App.css'
 
@@ -14,18 +15,48 @@ class BooksApp extends React.Component {
      */
     showSearchPage: false,
     isFetching: false,
-    books: []
+    books: [],
+    booksSearch: []
   }
 
   componentDidMount() {
-    this.setIsFetching(true)
-    BooksAPI.getAll().then((books) => {
-      this.setState({ books, isFetching: false })
-    })
+    this.getAllBooks();
   }
 
   setIsFetching = (isFetching) => {
     this.setState({ isFetching })
+  }
+
+  getShelf = (book) => {
+    if(this.state.books && this.state.books.length > 0) {
+      const bookFilteredFromShelf = this.state.books.filter(b => b.id === book.id)
+      console.log("get Shelf", book, this.state.books, bookFilteredFromShelf);
+      return bookFilteredFromShelf && bookFilteredFromShelf.length > 0 ? bookFilteredFromShelf[0].shelf : 'none'
+    }
+
+    return 'none'
+  }
+
+  getAllBooks = () => {
+    this.setIsFetching(true)
+    BooksAPI.getAll().then((books) => {
+      this.setState({ books, isFetching: false })
+    }).catch((err) => {
+      this.setState({ books: [], isFetching: false })
+      alert('Error on loading the books. Please, try again.')
+    })
+  }
+
+  searchBooksInAPI = (e) => {
+    const query = e.target.value
+
+    if(query && query.trim() !== '') {
+      BooksAPI.search(query).then((books) => {
+        this.setState({ query, booksSearch: books })
+      })
+    } else {
+        this.setState({ query, booksSearch: [] })
+    }
   }
 
   changeBookShelf = (book, newShelf) => {
@@ -34,8 +65,12 @@ class BooksApp extends React.Component {
       let newBook = book
       newBook.shelf = newShelf
       const newBookList = this.state.books
-      newBookList.splice(this.state.books.indexOf(book), 1, book)
+      const bookInList = this.state.books.filter(b => b.id === book.id)
+      newBookList.splice(this.state.books.indexOf(bookInList[0]), 1, book)
       this.setState({ books: newBookList, isFetching: false })
+    }).catch((err) => {
+      this.setState({ isFetching: false })
+      alert('Error on changing the shelf. Please, try again.')
     })
   }
 
@@ -56,12 +91,29 @@ class BooksApp extends React.Component {
                   However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
                   you don't find a specific author or title. Every search is limited by search terms.
                 */}
-                <input type="text" placeholder="Search by title or author"/>
+                <input
+                  type="text"
+                  placeholder="Search by title or author"
+                  onChange={ (event) => this.searchBooksInAPI(event) }/>
 
               </div>
             </div>
             <div className="search-books-results">
-              <ol className="books-grid"></ol>
+              <ol className="books-grid">
+                {
+                  (this.state.booksSearch && this.state.booksSearch.length > 0) ? this.state.booksSearch.map(book =>
+                    <Book
+                      key={book.id}
+                      id={`book_${book.id}`}
+                      title={book.title}
+                      authors={book.authors}
+                      bookCover={book.imageLinks.thumbnail}
+                      shelf={ this.getShelf(book) }
+                      onShelfChange={(newShelf) => this.changeBookShelf(book, newShelf)}
+                      />
+                  ) : (this.state.query) ? 'No books found' : ''
+                }
+              </ol>
             </div>
           </div>
         ) : (
