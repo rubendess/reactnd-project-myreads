@@ -5,8 +5,7 @@ import BookShelfChanger from './BookShelfChanger'
 class Book extends Component {
 
   static propTypes = {
-    title: PropTypes.string.isRequired,
-    authors: PropTypes.array.isRequired
+    title: PropTypes.string.isRequired
   }
 
   render() {
