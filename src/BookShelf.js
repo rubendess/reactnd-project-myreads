@@ -17,7 +17,7 @@ class BookShelf extends Component {
                   id={`book_${book.id}`}
                   title={book.title}
                   authors={book.authors}
-                  bookCover={book.imageLinks.thumbnail}
+                  bookCover={book.imageLinks && book.imageLinks.thumbnail ? book.imageLinks.thumbnail : null}
                   shelf={book.shelf}
                   onShelfChange={(newShelf) => this.props.onShelfChange(book, newShelf)}
                   />
