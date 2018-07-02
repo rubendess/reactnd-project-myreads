@@ -38,7 +38,6 @@ class BooksApp extends React.Component {
   getShelf = (book) => {
     if(this.state.books && this.state.books.length > 0) {
       const bookFilteredFromShelf = this.state.books.filter(b => b.id === book.id)
-      console.log("get Shelf", book, this.state.books, bookFilteredFromShelf);
       return bookFilteredFromShelf && bookFilteredFromShelf.length > 0 ? bookFilteredFromShelf[0].shelf : 'none'
     }
 
@@ -99,7 +98,10 @@ class BooksApp extends React.Component {
             </div>
             <div className="search-books-results">
               <ol className="books-grid">
-                {
+              {
+                this.state.isFetching ?
+                  <Loader />
+                  :
                   (this.state.booksSearch && this.state.booksSearch.length > 0) ? this.state.booksSearch.map(book =>
                     <Book
                       key={book.id}
